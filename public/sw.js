@@ -1,9 +1,10 @@
-const CACHE_NAME = 'pocket-finance-v1';
+const CACHE_NAME = 'pocket-finance-v2';
 const APP_ROOT = new URL('./', self.registration.scope).toString();
 const CORE_ASSETS = [
   APP_ROOT,
   new URL('manifest.webmanifest', APP_ROOT).toString(),
   new URL('icon-192.png', APP_ROOT).toString(),
+  new URL('icon.svg', APP_ROOT).toString(),
 ];
 
 self.addEventListener('install', (event) => {
