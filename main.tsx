@@ -8,6 +8,14 @@ import AuthGate from './components/AuthGate'
 
 document.documentElement.dataset.theme = useFinance.getState().settings.theme
 
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`, {
+      scope: import.meta.env.BASE_URL,
+    }).catch((error) => console.error('PWA service worker registration failed:', error))
+  })
+}
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AuthGate>

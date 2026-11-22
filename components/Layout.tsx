@@ -22,6 +22,7 @@ import {
 import { cn } from '@/lib/utils'
 import { CURRENCY_CODES, formatDate, todayISO, useFinance, type CurrencyCode } from '@/lib/finance'
 import { IconButton } from '@/components/ui'
+import InstallPWA from '@/components/InstallPWA'
 
 type NavItem = {
   to: string
@@ -72,9 +73,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <div className="flex h-full flex-col px-3 py-4">
       <Link to="/" onClick={onNavigate} className="mb-5 flex items-center gap-2.5 px-1.5">
-        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-strong text-white shadow-sm">
-          <Wallet size={18} />
-        </span>
+        <img src={`${import.meta.env.BASE_URL}icon-192.png`} alt="" className="h-9 w-9 rounded-xl shadow-sm" />
         <span className="leading-tight">
           <span className="block text-sm font-semibold tracking-tight">Pocket Finance</span>
           <span className="block text-[11px] text-muted">Личный финансовый учёт</span>
@@ -187,6 +186,7 @@ export default function Layout() {
             </div>
 
             <div className="ml-auto flex items-center gap-1.5">
+              <InstallPWA />
               <label className="flex items-center gap-1.5 rounded-lg border border-line bg-surface-2 px-2 py-1.5">
                 <span className="hidden text-[11px] text-muted sm:inline">Валюта</span>
                 <select
