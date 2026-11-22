@@ -114,9 +114,9 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
       </nav>
 
       <div className="mt-3 rounded-xl border border-line bg-surface-2 p-3">
-        <p className="text-[11px] font-semibold">Демонстрационные данные</p>
+        <p className="text-[11px] font-semibold">Облачное хранилище</p>
         <p className="mt-1 text-[11px] leading-relaxed text-muted">
-          Записи хранятся только в этом браузере. Реальные счета и Pocket Option не подключены.
+          Кошельки и операции синхронизируются с защищённым аккаунтом Supabase.
         </p>
       </div>
     </div>
@@ -182,7 +182,7 @@ export default function Layout() {
                 {current ? current.label : 'Pocket Finance'}
               </p>
               <p className="hidden text-[11px] text-muted sm:block">
-                Демо-данные · {formatDate(todayISO())}
+                Облачная синхронизация · {formatDate(todayISO())}
               </p>
             </div>
 
@@ -225,7 +225,7 @@ export default function Layout() {
         </main>
 
         <footer className="mx-auto max-w-[1400px] px-4 pb-6 text-[11px] text-muted sm:px-6">
-          Pocket Finance · демонстрационная версия интерфейса без подключения к финансовым сервисам
+          Pocket Finance · личный финансовый учёт с облачной синхронизацией
         </footer>
       </div>
     </div>
