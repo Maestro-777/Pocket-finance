@@ -1,5 +1,4 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
 
 /* ─────────────────────────  Типы  ───────────────────────── */
 
@@ -580,6 +579,7 @@ interface FinanceState {
   poEntries: PoEntry[]
   history: HistoryEntry[]
   settings: Settings
+  loadSnapshot: (snapshot: Partial<Pick<FinanceState, 'wallets' | 'transactions' | 'transfers' | 'poEntries' | 'history' | 'settings'>>) => void
   addWallet: (input: Omit<Wallet, 'id'>) => void
   updateWallet: (id: string, patch: Partial<Omit<Wallet, 'id'>>) => void
   deleteWallet: (id: string) => void
@@ -599,9 +599,28 @@ interface FinanceState {
 }
 
 export const useFinance = create<FinanceState>()(
-  persist(
     (set) => ({
-      ...createSeed(),
+      wallets: [],
+      transactions: [],
+      transfers: [],
+      poEntries: [],
+      history: [],
+      settings: {
+        baseCurrency: 'RUB',
+        theme: 'dark',
+        rates: { ...DEFAULT_RATES },
+      },
+
+      loadSnapshot: (snapshot) =>
+        set((state) => ({
+          ...state,
+          ...snapshot,
+          settings: {
+            ...state.settings,
+            ...(snapshot.settings ?? {}),
+            rates: { ...state.settings.rates, ...(snapshot.settings?.rates ?? {}) },
+          },
+        })),
 
       addWallet: (input) =>
         set((s) => ({
@@ -776,6 +795,4 @@ export const useFinance = create<FinanceState>()(
 
       resetDemo: () => set(() => ({ ...createSeed(), history: [historyEntry('reset', 'Данные', 'Демо-данные восстановлены'), ...createSeed().history] })),
     }),
-    { name: 'pocket-finance-demo-v1', version: 1 },
-  ),
 )
