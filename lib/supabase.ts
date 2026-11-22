@@ -7,6 +7,7 @@ export const supabase = createClient(
   'sb_publishable_NdmJOoLOWlCxdaSBjw9CLA_bUoXlXmz',
   {
     auth: {
+      flowType: 'pkce',
       persistSession: true,
       autoRefreshToken: true,
       detectSessionInUrl: true,
