@@ -159,12 +159,12 @@ export default function Dashboard() {
   return (
     <>
       <div className="mb-5 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:items-end sm:justify-between">
-        <div>
+        {/* <div>
           <h1 class="text-xl font-semibold tracking-tight sm:text-2xl">Главная панель</h1>
           <p className="mt-1 text-sm text-muted">
             Общий капитал, движение средств и последние операции
           </p>
-        </div>
+        </div> */}
         <div className="flex flex-wrap gap-2">
           <Button variant="success" size="sm" onClick={() => setDialog('income')}>
             + Доход
