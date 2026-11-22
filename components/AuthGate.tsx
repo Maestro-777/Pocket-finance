@@ -1,6 +1,6 @@
 import * as React from 'react'
 import type { User } from '@supabase/supabase-js'
-import { LogOut, Wallet, Cloud, Loader2 } from 'lucide-react'
+import { LogOut, Wallet as WalletIcon, Cloud, Loader2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { DEFAULT_RATES, useFinance, type CurrencyCode, type HistoryEntry, type PoEntry, type Settings, type Transfer, type Tx, type Wallet, type ThemeMode } from '@/lib/finance'
 
@@ -176,7 +176,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
       <div className="flex min-h-screen items-center justify-center bg-canvas px-4 py-10">
         <div className="w-full max-w-md rounded-2xl border border-line bg-surface p-7 shadow-2xl">
           <div className="mb-6 flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-strong text-white"><Wallet size={22} /></span>
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-strong text-white"><WalletIcon size={22} /></span>
             <div><h1 className="text-xl font-semibold tracking-tight">Pocket Finance</h1><p className="text-xs text-muted">Личный финансовый учёт</p></div>
           </div>
           <h2 className="text-lg font-semibold">{mode === 'signin' ? 'Вход в аккаунт' : 'Создать аккаунт'}</h2>
