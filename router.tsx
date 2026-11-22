@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createHashRouter } from 'react-router-dom'
 import Layout from './components/Layout'
 import Dashboard from './pages/Dashboard'
 import Wallets from './pages/Wallets'
@@ -11,7 +11,7 @@ import PocketOption from './pages/PocketOption'
 import { ExportPage, HistoryPage, SettingsPage } from './pages/Tools'
 import NotFound from './pages/NotFound'
 
-export const router = createBrowserRouter([
+export const router = createHashRouter([
   {
     path: '/',
     element: <Layout />,
