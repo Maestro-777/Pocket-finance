@@ -456,7 +456,7 @@ export function SettingsPage() {
 
   return (
     <>
-      <PageHeader title="Настройки" subtitle="Основная валюта, тема, курсы пересчёта и демо-данные" />
+      <PageHeader title="Настройки" subtitle="Основная валюта, тема, курсы пересчёта и управление данными" />
 
       <div className="grid gap-4 xl:grid-cols-3">
         <Panel className="xl:col-span-1">
@@ -559,10 +559,10 @@ export function SettingsPage() {
         </Panel>
 
         <Panel className="xl:col-span-3">
-          <PanelHeader title="Данные" subtitle="Демонстрационный режим без серверного хранения" />
+          <PanelHeader title="Данные" subtitle="Облачное хранилище аккаунта" />
           <div className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-sm">Все изменения сохраняются в этом браузере</p>
+              <p className="text-sm">Все изменения автоматически сохраняются в облаке</p>
               <p className="mt-1 text-[11px] leading-relaxed text-muted">
                 Backend не подключён: записи хранятся локально и не синхронизируются между
                 устройствами. Сброс восстановит исходный набор демонстрационных данных.
@@ -576,7 +576,7 @@ export function SettingsPage() {
                 <Download size={14} /> Экспорт
               </Link>
               <Button variant="danger" size="sm" icon={Trash2} onClick={() => setResetOpen(true)}>
-                Сбросить демо-данные
+                Загрузить демо-данные
               </Button>
             </div>
           </div>
@@ -600,9 +600,9 @@ export function SettingsPage() {
         open={resetOpen}
         onClose={() => setResetOpen(false)}
         title="Сбросить демо-данные?"
-        description="Текущие кошельки, операции, переводы и записи Pocket Option будут заменены исходным демонстрационным набором."
+        description="Текущие кошельки, операции, переводы и записи Pocket Option будут заменены демонстрационным набором. Это действие синхронизируется с облаком."
         confirmLabel="Сбросить"
-        onConfirm={resetDemo}
+        onConfirm={() => { resetDemo(); setResetOpen(false) }}
       />
     </>
   )
