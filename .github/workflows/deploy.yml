@@ -34,6 +34,29 @@ jobs:
         run: pnpm install --no-frozen-lockfile
       - name: Type check and build
         run: pnpm build
+      - name: Generate and validate PWA PNG icons
+        run: |
+          python -m pip install --disable-pip-version-check Pillow
+          python scripts/generate-pwa-icons.py
+      - name: Verify deployed PWA manifest assets
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from PIL import Image
+
+          dist = Path("dist")
+          manifest = json.loads((dist / "manifest.webmanifest").read_text())
+          for icon in manifest["icons"]:
+              path = dist / icon["src"].rsplit("/", 1)[-1]
+              assert path.is_file(), f"Missing manifest icon: {path}"
+              if icon["type"] == "image/png":
+                  with Image.open(path) as image:
+                      declared = icon["sizes"]
+                      actual = f"{image.width}x{image.height}"
+                      assert declared == actual, f"{path}: manifest says {declared}, actual {actual}"
+          print("Manifest JSON and all declared icon files are valid.")
+          PY
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
