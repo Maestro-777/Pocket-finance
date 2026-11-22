@@ -160,7 +160,7 @@ export default function Dashboard() {
     <>
       <div className="mb-5 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-xl font-semibold tracking-tight sm:text-2xl" style= text-align: center;">Главная панель</h1>
+          <h1 className="text-xl font-semibold tracking-tight sm:text-2xl" style= "text-align: center;">Главная панель</h1>
           <p className="mt-1 text-sm text-muted">
             Общий капитал, движение средств и последние операции
           </p>
