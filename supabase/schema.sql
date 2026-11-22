@@ -34,5 +34,3 @@ create policy "Users can delete their own finance state"
   on public.finance_state for delete to authenticated
   using ((select auth.uid()) = user_id);
 
-create index if not exists finance_state_updated_at_idx
-  on public.finance_state (updated_at desc);
