@@ -1,37 +1,15 @@
 import * as React from 'react'
 import { createPortal } from 'react-dom'
 import { Download, Share, X, Smartphone, ShieldCheck, Wifi } from 'lucide-react'
-
-type InstallPromptEvent = Event & {
-  prompt: () => Promise<void>
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>
-}
+import { getPwaInstallState, promptPwaInstall, subscribePwaInstall } from '@/lib/pwa-install'
 
 export default function InstallPWA() {
-  const [installEvent, setInstallEvent] = React.useState<InstallPromptEvent | null>(null)
-  const [showHelp, setShowHelp] = React.useState(false)
-  const [installed, setInstalled] = React.useState(
-    window.matchMedia('(display-mode: standalone)').matches ||
-      (navigator as Navigator & { standalone?: boolean }).standalone === true,
+  const { canPrompt, installed } = React.useSyncExternalStore(
+    subscribePwaInstall,
+    getPwaInstallState,
+    getPwaInstallState,
   )
-
-  React.useEffect(() => {
-    const onBeforeInstall = (event: Event) => {
-      event.preventDefault()
-      setInstallEvent(event as InstallPromptEvent)
-    }
-    const onInstalled = () => {
-      setInstalled(true)
-      setInstallEvent(null)
-      setShowHelp(false)
-    }
-    window.addEventListener('beforeinstallprompt', onBeforeInstall)
-    window.addEventListener('appinstalled', onInstalled)
-    return () => {
-      window.removeEventListener('beforeinstallprompt', onBeforeInstall)
-      window.removeEventListener('appinstalled', onInstalled)
-    }
-  }, [])
+  const [showHelp, setShowHelp] = React.useState(false)
 
   React.useEffect(() => {
     if (!showHelp) return
@@ -43,19 +21,26 @@ export default function InstallPWA() {
   }, [showHelp])
 
   const install = async () => {
-    if (!installEvent) {
+    if (!canPrompt) {
       setShowHelp(true)
       return
     }
-    await installEvent.prompt()
-    const choice = await installEvent.userChoice
-    if (choice.outcome === 'accepted') setInstalled(true)
-    setInstallEvent(null)
+    try {
+      const choice = await promptPwaInstall()
+      if (!choice) setShowHelp(true)
+    } catch (error) {
+      console.error('PWA installation prompt failed:', error)
+      setShowHelp(true)
+    }
   }
 
   if (installed) return null
 
-  const isAppleMobile = /iPhone|iPad|iPod/.test(navigator.userAgent)
+  const userAgent = navigator.userAgent
+  const isAppleMobile =
+    /iPhone|iPad|iPod/.test(userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+  const isAndroid = /Android/i.test(userAgent)
 
   return (
     <>
@@ -131,21 +116,24 @@ export default function InstallPWA() {
                 {isAppleMobile ? (
                   <>
                     <p className="flex items-center justify-center gap-2 text-sm font-semibold text-fg">
-                      <Share size={16} /> Как установить на iPhone
+                      <Share size={16} /> Как установить на iPhone или iPad
                     </p>
                     <ol className="mt-3 space-y-2 text-xs leading-relaxed text-muted">
-                      <li><span className="mr-2 font-semibold text-brand">1.</span>Откройте эту страницу в Safari.</li>
-                      <li><span className="mr-2 font-semibold text-brand">2.</span>Нажмите «Поделиться» внизу экрана.</li>
-                      <li><span className="mr-2 font-semibold text-brand">3.</span>Выберите «На экран Домой» → «Добавить».</li>
+                      <li><span className="mr-2 font-semibold text-brand">1.</span>Нажмите «Поделиться» в меню браузера.</li>
+                      <li><span className="mr-2 font-semibold text-brand">2.</span>Выберите «На экран Домой».</li>
+                      <li><span className="mr-2 font-semibold text-brand">3.</span>Включите «Открывать как веб-приложение», если такой переключатель показан, и нажмите «Добавить».</li>
                     </ol>
+                    <p className="mt-3 text-[11px] leading-relaxed text-muted">Если пункта нет, откройте страницу в Safari и повторите шаги.</p>
                   </>
                 ) : (
                   <>
                     <p className="flex items-center justify-center gap-2 text-sm font-semibold text-fg">
-                      <Download size={16} /> Установка через браузер
+                      <Download size={16} /> {isAndroid ? 'Установка на Android' : 'Установка через браузер'}
                     </p>
                     <p className="mt-2 text-xs leading-relaxed text-muted">
-                      Откройте меню браузера ⋮ и выберите «Установить приложение» или «Добавить на главный экран».
+                      {isAndroid
+                        ? 'Откройте меню браузера ⋮ и выберите «Установить приложение» или «Добавить на главный экран». В Chrome также может появиться значок установки в адресной строке.'
+                        : 'Откройте меню браузера и выберите «Установить Pocket Finance» или «Установить приложение». В Chrome и Edge команда также может находиться в адресной строке.'}
                     </p>
                   </>
                 )}
