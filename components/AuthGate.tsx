@@ -145,7 +145,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
     setMessage('')
     try {
       if (mode === 'signup') {
-        const { data, error: signUpError } = await supabase.auth.signUp({ email: email.trim(), password })
+        const { data, error: signUpError } = await supabase.auth.signUp({\n          email: email.trim(),\n          password,\n          options: { emailRedirectTo: window.location.origin + window.location.pathname },\n        })
         if (signUpError) throw signUpError
         if (!data.session) {
           setMessage('Аккаунт создан. Подтверди адрес электронной почты по ссылке из письма, затем войди.')
