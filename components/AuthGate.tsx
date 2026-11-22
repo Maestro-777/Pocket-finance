@@ -2,16 +2,16 @@ import * as React from 'react'
 import type { User } from '@supabase/supabase-js'
 import { LogOut, Wallet, Cloud, Loader2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
-import { useFinance } from '@/lib/finance'
+import { DEFAULT_RATES, useFinance, type CurrencyCode, type HistoryEntry, type PoEntry, type Settings, type Transfer, type Tx, type Wallet, type ThemeMode } from '@/lib/finance'
 
 type AuthMode = 'signin' | 'signup'
 type Snapshot = {
-  wallets: unknown[]
-  transactions: unknown[]
-  transfers: unknown[]
-  poEntries: unknown[]
-  history: unknown[]
-  settings: Record<string, unknown>
+  wallets: Wallet[]
+  transactions: Tx[]
+  transfers: Transfer[]
+  poEntries: PoEntry[]
+  history: HistoryEntry[]
+  settings: Settings
 }
 
 const EMPTY_SNAPSHOT: Snapshot = {
@@ -21,9 +21,9 @@ const EMPTY_SNAPSHOT: Snapshot = {
   poEntries: [],
   history: [],
   settings: {
-    baseCurrency: 'RUB',
-    theme: 'dark',
-    rates: { USD: 1, EUR: 1.08, RUB: 0.0111, UZS: 0.000079, KZT: 0.00195, BTC: 96000, ETH: 3400, USDT: 1 },
+    baseCurrency: 'RUB' as CurrencyCode,
+    theme: 'dark' as ThemeMode,
+    rates: { ...DEFAULT_RATES },
   },
 }
 
@@ -109,12 +109,12 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
 
       const saved = (data?.state ?? EMPTY_SNAPSHOT) as Partial<Snapshot>
       loadSnapshot({
-        wallets: Array.isArray(saved.wallets) ? saved.wallets as never[] : [],
-        transactions: Array.isArray(saved.transactions) ? saved.transactions as never[] : [],
-        transfers: Array.isArray(saved.transfers) ? saved.transfers as never[] : [],
-        poEntries: Array.isArray(saved.poEntries) ? saved.poEntries as never[] : [],
-        history: Array.isArray(saved.history) ? saved.history as never[] : [],
-        settings: saved.settings as never ?? EMPTY_SNAPSHOT.settings as never,
+        wallets: Array.isArray(saved.wallets) ? saved.wallets : [],
+        transactions: Array.isArray(saved.transactions) ? saved.transactions : [],
+        transfers: Array.isArray(saved.transfers) ? saved.transfers : [],
+        poEntries: Array.isArray(saved.poEntries) ? saved.poEntries : [],
+        history: Array.isArray(saved.history) ? saved.history : [],
+        settings: saved.settings ?? EMPTY_SNAPSHOT.settings,
       })
       setDataReady(true)
 
