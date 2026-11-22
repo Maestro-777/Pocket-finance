@@ -410,7 +410,7 @@ export function ExportPage() {
           )}
           <p className="border-t border-line px-4 py-3 text-[11px] text-muted">
             Pocket Option: баланс {formatMoney(po.balance, 'USD')}, чистый результат{' '}
-            {formatMoney(po.net, 'USD')}. Экспорт формируется в браузере, данные никуда не отправляются.
+            {formatMoney(po.net, 'USD')}. Файл экспорта формируется локально в браузере.
           </p>
         </Panel>
       </div>
@@ -599,9 +599,9 @@ export function SettingsPage() {
       <ConfirmDialog
         open={resetOpen}
         onClose={() => setResetOpen(false)}
-        title="Сбросить демо-данные?"
+        title="Загрузить демо-данные?"
         description="Текущие кошельки, операции, переводы и записи Pocket Option будут заменены демонстрационным набором. Это действие синхронизируется с облаком."
-        confirmLabel="Сбросить"
+        confirmLabel="Загрузить демо-данные"
         onConfirm={() => { resetDemo(); setResetOpen(false) }}
       />
     </>
