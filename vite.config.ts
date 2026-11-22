@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url'
 const root = path.dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig({
-  base: '/Pocket-finance/',
+  base: process.env.GITHUB_ACTIONS === 'true' ? '/Pocket-finance/' : '/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
